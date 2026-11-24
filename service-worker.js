@@ -1,5 +1,5 @@
 /* Service Worker offline-first para la PWA privada de Doña Elena */
-const CACHE_NAME = 'dona-elena-endo-v3';
+const CACHE_NAME = 'dona-elena-endo-v4';
 
 const APP_SHELL = [
   './',
