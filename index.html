@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#5B7F6E" />
+  <meta name="description" content="Herramienta de bolsillo de Endocrinología para consulta — Doña Elena." />
+
+  <!-- Soporte PWA iOS / Android -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Doña Elena" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <link rel="icon" type="image/svg+xml" href="./icons/icon.svg" />
+  <link rel="manifest" href="./manifest.json" />
+
+  <title>Consulta · Doña Elena</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Cabecera personalizada -->
+    <header class="app-header">
+      <div>
+        <span class="brand-eyebrow">Endocrinología · Privada</span>
+        <h1 class="app-title">Doña Elena</h1>
+        <p class="app-subtitle">Tu herramienta de bolsillo para consulta.</p>
+        <p class="app-credit">Diseñado por Sam Lazkano</p>
+      </div>
+      <div class="header-actions">
+        <button id="installBtn" class="install-btn hidden" type="button" aria-label="Instalar aplicación en el móvil">
+          Instalar
+        </button>
+        <button id="themeToggle" class="icon-btn" type="button" aria-label="Cambiar entre modo claro y oscuro" title="Cambiar tema">
+          <span id="themeIcon" aria-hidden="true">🌙</span>
+        </button>
+      </div>
+    </header>
+
+    <div id="offlineBadge" class="offline-pill hidden" role="status">
+      Sin conexión · Funcionando en modo local
+    </div>
+
+    <!-- Barra de búsqueda instantánea -->
+    <div class="search-bar-wrap">
+      <div class="search-box">
+        <span class="search-icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+        </span>
+        <input
+          id="globalSearch"
+          class="search-input"
+          type="search"
+          autocomplete="off"
+          placeholder="Buscar: tiroides, calcio, embarazo, corticoides..."
+          aria-label="Buscar calculadoras, guías o pautas"
+        />
+        <button id="clearSearchBtn" class="search-clear hidden" type="button" aria-label="Limpiar búsqueda">
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <!-- Encabezado contextual de búsqueda -->
+    <div id="searchSummary" class="section-head hidden">
+      <h2 class="section-title">Resultados de búsqueda</h2>
+      <span id="searchCount" class="section-count"></span>
+    </div>
+
+    <main id="mainContent">
+      <!-- ==================== PESTAÑA 1: CALCULADORAS ==================== -->
+      <section id="tab-calculadoras" class="tab-panel" data-tab="calculadoras">
+        <div class="section-head tab-header">
+          <h2 class="section-title">Calculadoras clínicas</h2>
+          <span class="section-count">6 herramientas</span>
+        </div>
+
+        <div class="cards-stack" id="calculadorasList">
+          <!-- 1. Calcio corregido -->
+          <article class="card searchable-item" data-id="calc-calcio" data-tab="calculadoras" data-keywords="calcio albumina corregido hipercalcemia hipocalcemia mg dl">
+            <div class="card-head">
+              <div class="card-title-group">
+                <span class="card-badge">Metabolismo fosfocálcico</span>
+                <h3 class="card-title">Calcio corregido por albúmina</h3>
+                <p class="card-subtitle">Ca medido + 0.8 × (4 − Albúmina)</p>
+              </div>
+              <div class="card-actions">
+                <button class="fav-btn" type="button" data-fav-id="calc-calcio" aria-label="Marcar Calcio corregido como favorito">☆</button>
+              </div>
+            </div>
+            <div class="fields-grid">
+              <div class="field">
+                <label for="ca-medido">Calcio medido (mg/dL)</label>
+                <input id="ca-medido" class="input-control" type="text" inputmode="decimal" placeholder="Ej. 8.4" />
+              </div>
+              <div class="field">
+                <label for="ca-albumina">Albúmina (g/dL)</label>
+                <input id="ca-albumina" class="input-control" type="text" inputmode="decimal" placeholder="Ej. 3.1" />
+              </div>
+            </div>
+            <div id="ca-result" class="result-box is-empty">Introduce calcio y albúmina para calcular.</div>
+            <div class="card-footer-actions">
+              <button class="btn btn-secondary btn-clear" type="button" data-clear="calc-calcio">Limpiar</button>
+            </div>
+          </article>
+
+          <!-- 2. Índice HOMA-IR -->
+          <article class="card searchable-item" data-id="calc-homa" data-tab="calculadoras" data-keywords="homa ir insulina glucosa resistencia insulinorresistencia sindrome metabolico">
+            <div class="card-head">
+              <div class="card-title-group">
+                <span class="card-badge">Metabolismo glucídico</span>
+                <h3 class="card-title">Índice HOMA-IR</h3>
+                <p class="card-subtitle">(Glucosa mg/dL × Insulina µU/mL) / 405</p>
+              </div>
+              <div class="card-actions">
+                <button class="fav-btn" type="button" data-fav-id="calc-homa" aria-label="Marcar HOMA-IR como favorito">☆</button>
+              </div>
+            </div>
+            <div class="fields-grid">
+              <div class="field">
+                <label for="homa-glucosa">Glucosa basal (mg/dL)</label>
+                <input id="homa-glucosa" class="input-control" type="text" inputmode="decimal" placeholder="Ej. 98" />
+              </div>
+              <div class="field">
+                <label for="homa-insulina">Insulina basal (µU/mL)</label>
+                <input id="homa-insulina" class="input-control" type="text" inputmode="decimal" placeholder="Ej. 14.5" />
+              </div>
+            </div>
+            <div id="homa-result" class="result-box is-empty">Introduce glucosa e insulina en ayunas.</div>
+            <div class="card-footer-actions">
+              <button class="btn btn-secondary btn-clear" type="button" data-clear="calc-homa">Limpiar</button>
+            </div>
+          </article>
+
+          <!-- 3. Conversor HbA1c <-> eAG -->
+          <article class="card searchable-item" data-id="calc-hba1c" data-tab="calculadoras" data-keywords="hba1c hemoglobina glicosilada glucosa media estimada eag diabetes mmol">
+            <div class="card-head">
+              <div class="card-title-group">
+                <span class="card-badge">Control glucémico</span>
+                <h3 class="card-title">Conversor HbA1c (%) ↔ Glucosa media</h3>
+                <p class="card-subtitle">Fórmula ADAG: eAG = 28.7 × HbA1c − 46.7</p>
+              </div>
+              <div class="card-actions">
+                <button class="fav-btn" type="button" data-fav-id="calc-hba1c" aria-label="Marcar Conversor HbA1c como favorito">☆</button>
+              </div>
+            </div>
+            <div class="fields-grid cols-3">
+              <div class="field">
+                <label for="a1c-pct">HbA1c (%)</label>
+                <input id="a1c-pct" class="input-control" type="text" inputmode="decimal" placeholder="Ej. 7.0" />
+              </div>
+              <div class="field">
+                <label for="a1c-mgdl">eAG (mg/dL)</label>
+                <input id="a1c-mgdl" class="input-control" type="text" inputmode="decimal" placeholder="Ej. 154" />
+              </div>
+              <div class="field">
+                <label for="a1c-mmol">eAG (mmol/L)</label>
+                <input id="a1c-mmol" class="input-control" type="text" inputmode="decimal" placeholder="Ej. 8.6" />
+              </div>
+            </div>
+            <div id="a1c-result" class="result-box is-empty">Edita cualquiera de los tres campos para convertir al instante.</div>
+            <div class="card-footer-actions">
+              <button class="btn btn-secondary btn-clear" type="button" data-clear="calc-hba1c">Limpiar</button>
+            </div>
+          </article>
+
+          <!-- 4. IMC y % pérdida de peso -->
+          <article class="card searchable-item" data-id="calc-imc" data-tab="calculadoras" data-keywords="imc peso talla perdida ponderal obesidad sobrepeso nutricion desnutricion">
+            <div class="card-head">
+              <div class="card-title-group">
+                <span class="card-badge">Antropometría</span>
+                <h3 class="card-title">IMC y % de pérdida de peso</h3>
+                <p class="card-subtitle">Índice de masa corporal y variación ponderal</p>
+              </div>
+              <div class="card-actions">
+                <button class="fav-btn" type="button" data-fav-id="calc-imc" aria-label="Marcar IMC y pérdida de peso como favorito">☆</button>
+              </div>
+            </div>
+            <div class="fields-grid cols-3">
+              <div class="field">
+                <label for="imc-peso">Peso actual (kg)</label>
+                <input id="imc-peso" class="input-control" type="text" inputmode="decimal" placeholder="Ej. 68" />
+              </div>
+              <div class="field">
+                <label for="imc-talla">Talla (cm o m)</label>
+                <input id="imc-talla" class="input-control" type="text" inputmode="decimal" placeholder="Ej. 165" />
+              </div>
+              <div class="field">
+                <label for="imc-previo">Peso previo (kg)</label>
+                <input id="imc-previo" class="input-control" type="text" inputmode="decimal" placeholder="Opcional" />
+              </div>
+            </div>
+            <div id="imc-result" class="result-box is-empty">Introduce peso actual y talla (el peso previo es opcional).</div>
+            <div class="card-footer-actions">
+              <button class="btn btn-secondary btn-clear" type="button" data-clear="calc-imc">Limpiar</button>
+            </div>
+          </article>
+
+          <!-- 5. Conversor de corticoides -->
+          <article class="card searchable-item" data-id="calc-corticoides" data-tab="calculadoras" data-keywords="corticoides hidrocortisona prednisona metilprednisolona dexametasona deflazacort suprarrenal">
+            <div class="card-head">
+              <div class="card-title-group">
+                <span class="card-badge">Suprarrenal</span>
+                <h3 class="card-title">Conversor de corticoides</h3>
+                <p class="card-subtitle">Equivalencia antiinflamatoria (20 / 5 / 4 / 0.75 / 6 mg)</p>
+              </div>
+              <div class="card-actions">
+                <button class="fav-btn" type="button" data-fav-id="calc-corticoides" aria-label="Marcar Conversor de corticoides como favorito">☆</button>
+              </div>
+            </div>
+            <div class="fields-grid">
+              <div class="field">
+                <label for="cort-tipo">Corticoide de origen</label>
+                <select id="cort-tipo" class="select-control">
+                  <option value="prednisona">Prednisona (5 mg)</option>
+                  <option value="hidrocortisona">Hidrocortisona (20 mg)</option>
+                  <option value="metilprednisolona">Metilprednisolona (4 mg)</option>
+                  <option value="dexametasona">Dexametasona (0.75 mg)</option>
+                  <option value="deflazacort">Deflazacort (6 mg)</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="cort-dosis">Dosis (mg)</label>
+                <input id="cort-dosis" class="input-control" type="text" inputmode="decimal" placeholder="Ej. 20" />
+              </div>
+            </div>
+            <div id="cort-result" class="result-box is-empty">Introduce una dosis en mg para ver todas las equivalencias.</div>
+            <div class="card-footer-actions">
+              <button class="btn btn-secondary btn-clear" type="button" data-clear="calc-corticoides">Limpiar</button>
+            </div>
+          </article>
+
+          <!-- 6. Dosis orientativa de Levotiroxina -->
+          <article class="card searchable-item" data-id="calc-levo" data-tab="calculadoras" data-keywords="levotiroxina tiroides hipotiroidismo eutirox dosis peso mcg">
+            <div class="card-head">
+              <div class="card-title-group">
+                <span class="card-badge">Tiroides</span>
+                <h3 class="card-title">Dosis orientativa de Levotiroxina</h3>
+                <p class="card-subtitle">Cálculo por peso (~1.6 mcg/kg/día) y presentaciones</p>
+              </div>
+              <div class="card-actions">
+                <button class="fav-btn" type="button" data-fav-id="calc-levo" aria-label="Marcar Levotiroxina como favorito">☆</button>
+              </div>
+            </div>
+            <div class="segment-row" role="group" aria-label="Factor de cálculo por kg">
+              <button class="segment-btn active" type="button" data-levo-factor="1.6">Estándar (1.6 mcg/kg)</button>
+              <button class="segment-btn" type="button" data-levo-factor="1.2">Mayor / Cardiopatía (1.2)</button>
+            </div>
+            <div class="fields-grid cols-1">
+              <div class="field">
+                <label for="levo-peso">Peso del paciente (kg)</label>
+                <input id="levo-peso" class="input-control" type="text" inputmode="decimal" placeholder="Ej. 66" />
+              </div>
+            </div>
+            <div id="levo-result" class="result-box is-empty">Introduce el peso para estimar la dosis y resaltar la presentación más cercana.</div>
+            <div class="dose-chips" id="levo-chips" aria-label="Dosis comerciales habituales en mcg"></div>
+            <div class="card-footer-actions">
+              <button class="btn btn-secondary btn-clear" type="button" data-clear="calc-levo">Limpiar</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ==================== PESTAÑA 2: GUÍAS RÁPIDAS ==================== -->
+      <section id="tab-guias" class="tab-panel hidden" data-tab="guias">
+        <div class="section-head tab-header">
+          <h2 class="section-title">Guías rápidas</h2>
+          <span class="section-count">3 fichas</span>
+        </div>
+
+        <div class="cards-stack" id="guiasList">
+          <!-- Guía 1: Tiroides y embarazo -->
+          <article class="card searchable-item" data-id="guia-embarazo" data-tab="guias" data-keywords="tiroides embarazo tsh trimestre gestacion levotiroxina hipotiroidismo">
+            <div class="card-head">
+              <div class="card-title-group">
+                <span class="card-badge">Tiroides</span>
+                <h3 class="card-title">Tiroides y embarazo</h3>
+                <p class="card-subtitle">Rangos orientativos de TSH por trimestre</p>
+              </div>
+              <div class="card-actions">
+                <button class="fav-btn" type="button" data-fav-id="guia-embarazo" aria-label="Marcar Tiroides y embarazo como favorito">☆</button>
+              </div>
+            </div>
+            <details class="guide-details" open>
+              <summary>
+                <span>Ver rangos y puntos clave</span>
+                <span class="guide-chevron" aria-hidden="true">▾</span>
+              </summary>
+              <div class="guide-body">
+                <table class="guide-table">
+                  <thead>
+                    <tr>
+                      <th>Etapa</th>
+                      <th>TSH orientativa (mUI/L)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Preconcepción / en tto</td>
+                      <td><strong>&lt; 2.5</strong></td>
+                    </tr>
+                    <tr>
+                      <td>1.er trimestre</td>
+                      <td><strong>0.1 – 2.5</strong> (o límite lab.)</td>
+                    </tr>
+                    <tr>
+                      <td>2.º trimestre</td>
+                      <td><strong>0.2 – 3.0</strong></td>
+                    </tr>
+                    <tr>
+                      <td>3.er trimestre</td>
+                      <td><strong>0.3 – 3.0</strong></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="guide-callout">
+                  <strong>Recordatorio práctico:</strong> En pacientes ya tratadas con levotiroxina, al confirmar embarazo suele requerirse subir la dosis semanal ~<strong>25–30%</strong> (p. ej., 2 dosis extra por semana) y controlar TSH cada 4 semanas durante la primera mitad de la gestación. Priorizar intervalos de referencia locales del laboratorio si están disponibles.
+                </div>
+              </div>
+            </details>
+          </article>
+
+          <!-- Guía 2: Criterios ADA -->
+          <article class="card searchable-item" data-id="guia-ada" data-tab="guias" data-keywords="diabetes prediabetes ada criterios diagnosticos glucemia basal hba1c sog curva">
+            <div class="card-head">
+              <div class="card-title-group">
+                <span class="card-badge">Diabetes</span>
+                <h3 class="card-title">Criterios diagnósticos (ADA)</h3>
+                <p class="card-subtitle">Diabetes mellitus y prediabetes</p>
+              </div>
+              <div class="card-actions">
+                <button class="fav-btn" type="button" data-fav-id="guia-ada" aria-label="Marcar Criterios ADA como favorito">☆</button>
+              </div>
+            </div>
+            <details class="guide-details">
+              <summary>
+                <span>Ver tabla comparativa</span>
+                <span class="guide-chevron" aria-hidden="true">▾</span>
+              </summary>
+              <div class="guide-body">
+                <table class="guide-table">
+                  <thead>
+                    <tr>
+                      <th>Prueba</th>
+                      <th>Prediabetes</th>
+                      <th>Diabetes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Glucemia basal (≥ 8 h ayuno)</td>
+                      <td>100 – 125 mg/dL</td>
+                      <td><strong>≥ 126 mg/dL</strong></td>
+                    </tr>
+                    <tr>
+                      <td>HbA1c</td>
+                      <td>5.7 – 6.4 %</td>
+                      <td><strong>≥ 6.5 %</strong></td>
+                    </tr>
+                    <tr>
+                      <td>SOG 75 g (a las 2 h)</td>
+                      <td>140 – 199 mg/dL</td>
+                      <td><strong>≥ 200 mg/dL</strong></td>
+                    </tr>
+                    <tr>
+                      <td>Glucemia al azar + clínica</td>
+                      <td>—</td>
+                      <td><strong>≥ 200 mg/dL</strong></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="guide-callout">
+                  En ausencia de hiperglucemia inequívoca con síntomas clásicos, confirmar con una segunda determinación (misma prueba repetida o dos pruebas distintas alteradas en la misma muestra).
+                </div>
+              </div>
+            </details>
+          </article>
+
+          <!-- Guía 3: Interferencias frecuentes -->
+          <article class="card searchable-item" data-id="guia-interferencias" data-tab="guias" data-keywords="interferencias levotiroxina hierro calcio ibp omeprazol biotina analitica tsh t4">
+            <div class="card-head">
+              <div class="card-title-group">
+                <span class="card-badge">Analítica y fármacos</span>
+                <h3 class="card-title">Interferencias frecuentes</h3>
+                <p class="card-subtitle">Absorción de levotiroxina y efecto de la biotina</p>
+              </div>
+              <div class="card-actions">
+                <button class="fav-btn" type="button" data-fav-id="guia-interferencias" aria-label="Marcar Interferencias frecuentes como favorito">☆</button>
+              </div>
+            </div>
+            <details class="guide-details">
+              <summary>
+                <span>Ver fármacos y tiempos</span>
+                <span class="guide-chevron" aria-hidden="true">▾</span>
+              </summary>
+              <div class="guide-body">
+                <strong>Con Levotiroxina (reducen absorción):</strong>
+                <ul class="guide-list">
+                  <li><strong>Hierro, calcio, magnesio, antiácidos, sucralfato y colestiramina:</strong> separar al menos <strong>4 horas</strong>.</li>
+                  <li><strong>IBP (omeprazol, pantoprazol):</strong> reducen la acidez gástrica; tomar levotiroxina en ayunas y espaciar si hay mal control.</li>
+                  <li><strong>Café, leche, soja y suplementos de fibra:</strong> esperar <strong>30–60 min</strong> tras la toma con agua.</li>
+                </ul>
+                <div class="guide-callout">
+                  <strong>Biotina (vitamina B7/B8) en analíticas:</strong> Dosis altas (pelo/uñas o multivitamínicos) interfieren en inmunoensayos basados en estreptavidina-biotina, simulando un patrón de <strong>falso hipertiroidismo</strong> (TSH falsamente baja y T4L/T3L falsamente altas) y alterando PTH o Tg. Indicar suspender al menos <strong>48–72 h</strong> antes de la extracción.
+                </div>
+              </div>
+            </details>
+          </article>
+        </div>
+      </section>
+
+      <!-- ==================== PESTAÑA 3: PAUTAS PARA PACIENTES ==================== -->
+      <section id="tab-pautas" class="tab-panel hidden" data-tab="pautas">
+        <div class="section-head tab-header">
+          <h2 class="section-title">Pautas para pacientes</h2>
+          <span class="section-count">Listas para copiar</span>
+        </div>
+
+        <div class="cards-stack" id="pautasList">
+          <!-- Plantilla 1: Levotiroxina -->
+          <article class="card searchable-item" data-id="pauta-levo" data-tab="pautas" data-keywords="levotiroxina tomar ayunas pastilla tiroides whatsapp paciente">
+            <div class="card-head">
+              <div class="card-title-group">
+                <span class="card-badge">Tiroides</span>
+                <h3 class="card-title">Cómo tomar la levotiroxina</h3>
+              </div>
+              <div class="card-actions">
+                <button class="fav-btn" type="button" data-fav-id="pauta-levo" aria-label="Marcar pauta Levotiroxina como favorita">☆</button>
+              </div>
+            </div>
+            <p class="template-preview" data-template-id="pauta-levo">Pauta para tomar la levotiroxina correctamente:
+• Tómela nada más levantarse, en ayunas y solo con un vaso de agua.
+• Espere entre 30 y 60 minutos antes de desayunar (incluidos café, leche o zumos).
+• Separe al menos 4 horas los suplementos de calcio, hierro o protectores gástricos.
+• Si un día la olvida, tómela en cuanto lo recuerde (o doble al día siguiente solo si su médica se lo indicó).
+• El día de la analítica, realice la extracción ANTES de tomar la pastilla.</p>
+            <div class="card-footer-actions">
+              <button class="btn btn-primary btn-full btn-copy" type="button" data-copy-target="pauta-levo">Copiar texto</button>
+            </div>
+          </article>
+
+          <!-- Plantilla 2: Regla del 15 -->
+          <article class="card searchable-item" data-id="pauta-hipo" data-tab="pautas" data-keywords="hipoglucemia bajada azucar regla 15 glucosa diabetes paciente">
+            <div class="card-head">
+              <div class="card-title-group">
+                <span class="card-badge">Diabetes</span>
+                <h3 class="card-title">Qué hacer ante una hipoglucemia (regla del 15)</h3>
+              </div>
+              <div class="card-actions">
+                <button class="fav-btn" type="button" data-fav-id="pauta-hipo" aria-label="Marcar pauta Hipoglucemia como favorita">☆</button>
+              </div>
+            </div>
+            <p class="template-preview" data-template-id="pauta-hipo">Qué hacer si la glucosa baja de 70 mg/dL (Regla del 15):
+1. Tome 15 gramos de azúcar de absorción rápida: 1 vaso pequeño (150 ml) de zumo o refresco azucarado, 2 sobres de azúcar disueltos en agua o 1 gel/tableta de glucosa (evite chocolate o bollería porque tardan en subir).
+2. Espere 15 minutos en reposo y vuelva a medir la glucosa.
+3. Si sigue por debajo de 70 mg/dL, repita los 15 g de azúcar y espere otros 15 minutos.
+4. Cuando ya supere los 70 mg/dL, si falta más de 1 hora para la siguiente comida, tome algo de hidrato lento (ej. 2 galletas o un trozo pequeño de pan).</p>
+            <div class="card-footer-actions">
+              <button class="btn btn-primary btn-full btn-copy" type="button" data-copy-target="pauta-hipo">Copiar texto</button>
+            </div>
+          </article>
+
+          <!-- Plantilla 3: Analítica hormonal / curva -->
+          <article class="card searchable-item" data-id="pauta-analitica" data-tab="pautas" data-keywords="analitica cortisol prolactina curva glucosa sog ayuno preparacion">
+            <div class="card-head">
+              <div class="card-title-group">
+                <span class="card-badge">Analítica</span>
+                <h3 class="card-title">Preparación para analítica hormonal o curva</h3>
+              </div>
+              <div class="card-actions">
+                <button class="fav-btn" type="button" data-fav-id="pauta-analitica" aria-label="Marcar pauta Analítica como favorita">☆</button>
+              </div>
+            </div>
+            <p class="template-preview" data-template-id="pauta-analitica">Indicaciones previas a su analítica:
+• Acuda en ayunas de 8–12 horas (puede beber agua).
+• Para Cortisol / Prolactina: realice la extracción a primera hora de la mañana (08:00–09:00 h), descansando sentado 15–30 min antes del pinchazo y evitando ejercicio intenso o estrés la tarde previa.
+• Si toma biotina o suplementos para pelo/uñas, suspéndalos 48–72 horas antes.
+• Si le han pedido curva de glucosa (SOG): mantenga dieta normal los 3 días previos, permanezca en reposo durante las 2 horas de la prueba y no fume ni ingiera alimentos hasta finalizar.</p>
+            <div class="card-footer-actions">
+              <button class="btn btn-primary btn-full btn-copy" type="button" data-copy-target="pauta-analitica">Copiar texto</button>
+            </div>
+          </article>
+
+          <!-- Plantilla 4: Zonas de inyección -->
+          <article class="card searchable-item" data-id="pauta-inyeccion" data-tab="pautas" data-keywords="inyeccion rotacion insulina glp1 pluma aguja lipodistrofia abdomen muslo">
+            <div class="card-head">
+              <div class="card-title-group">
+                <span class="card-badge">Tratamiento inyectable</span>
+                <h3 class="card-title">Rotación de zonas de inyección</h3>
+              </div>
+              <div class="card-actions">
+                <button class="fav-btn" type="button" data-fav-id="pauta-inyeccion" aria-label="Marcar pauta Rotación de inyección como favorita">☆</button>
+              </div>
+            </div>
+            <p class="template-preview" data-template-id="pauta-inyeccion">Recomendaciones para inyectar insulina o análogos GLP-1:
+• Rote siempre el punto de pinchazo dejando al menos 1–2 cm (el ancho de un dedo) respecto al anterior para evitar bultos (lipodistrofias) y mejorar la absorción.
+• Zonas recomendadas: abdomen (dejando 2 dedos libres alrededor del ombligo), parte externa superior de los muslos y parte posterior/externa de los brazos.
+• Utilice una aguja nueva en cada administración y espere unos 10 segundos antes de retirar la pluma tras presionar el botón.
+• Evite pinchar sobre lunares, cicatrices o zonas endurecidas.</p>
+            <div class="card-footer-actions">
+              <button class="btn btn-primary btn-full btn-copy" type="button" data-copy-target="pauta-inyeccion">Copiar texto</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ==================== PESTAÑA 4: NOTAS RÁPIDAS ==================== -->
+      <section id="tab-notas" class="tab-panel hidden" data-tab="notas">
+        <div class="section-head tab-header">
+          <h2 class="section-title">Notas rápidas personales</h2>
+          <span id="notesCount" class="section-count">0 notas</span>
+        </div>
+
+        <div class="privacy-banner" role="note">
+          <span aria-hidden="true">🔒</span>
+          <span>Privado en este dispositivo (`localStorage`). No guardar datos identificativos de pacientes.</span>
+        </div>
+
+        <article class="card" style="margin-bottom: 14px;">
+          <form id="noteForm">
+            <div class="fields-grid cols-1">
+              <div class="field">
+                <label for="noteTitle">Título (opcional)</label>
+                <input id="noteTitle" class="input-control" type="text" maxlength="80" placeholder="Ej. Extensión laboratorio / enlace SEEN" />
+              </div>
+              <div class="field">
+                <label for="noteBody">Nota o enlace útil</label>
+                <textarea id="noteBody" class="textarea-control" placeholder="Escribe un recordatorio rápido o pega una URL (https://...)"></textarea>
+              </div>
+            </div>
+            <div class="card-footer-actions">
+              <button id="noteCancelEditBtn" class="btn btn-secondary hidden" type="button">Cancelar</button>
+              <button id="noteSaveBtn" class="btn btn-primary" type="submit">Guardar nota</button>
+            </div>
+          </form>
+        </article>
+
+        <div id="notesList" class="cards-stack"></div>
+      </section>
+
+      <!-- Estado vacío cuando la búsqueda no encuentra resultados -->
+      <div id="searchEmptyState" class="empty-state hidden">
+        <p style="margin: 0 0 8px; font-weight: 600;">No hay coincidencias</p>
+        <p style="margin: 0; font-size: 0.86rem;">Prueba con palabras como «tiroides», «calcio», «embarazo», «corticoides» o «hipoglucemia».</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- Navegación inferior fija -->
+  <nav class="bottom-nav" aria-label="Navegación principal">
+    <div class="bottom-nav-inner">
+      <button class="nav-btn active" type="button" data-nav="calculadoras" aria-current="page">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="4" y="2" width="16" height="20" rx="2" />
+          <line x1="8" y1="6" x2="16" y2="6" />
+          <line x1="8" y1="10" x2="8" y2="10.01" />
+          <line x1="12" y1="10" x2="12" y2="10.01" />
+          <line x1="16" y1="10" x2="16" y2="10.01" />
+          <line x1="8" y1="14" x2="8" y2="14.01" />
+          <line x1="12" y1="14" x2="12" y2="14.01" />
+          <line x1="16" y1="14" x2="16" y2="14.01" />
+          <line x1="8" y1="18" x2="16" y2="18" />
+        </svg>
+        <span>Calculadoras</span>
+      </button>
+
+      <button class="nav-btn" type="button" data-nav="guias">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+        </svg>
+        <span>Guías</span>
+      </button>
+
+      <button class="nav-btn" type="button" data-nav="pautas">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+        <span>Pautas</span>
+      </button>
+
+      <button class="nav-btn" type="button" data-nav="notas">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 20h9" />
+          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+        </svg>
+        <span>Notas</span>
+      </button>
+    </div>
+  </nav>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
