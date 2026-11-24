@@ -852,7 +852,16 @@
   function initPWA() {
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js').catch(() => {
+        const hadController = Boolean(navigator.serviceWorker.controller);
+        let refreshing = false;
+
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (!hadController || refreshing) return;
+          refreshing = true;
+          window.location.reload();
+        });
+
+        navigator.serviceWorker.register('./service-worker.js', { updateViaCache: 'none' }).catch(() => {
           /* En file:// no se registra SW; funciona correctamente bajo HTTP/HTTPS */
         });
       });

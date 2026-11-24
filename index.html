@@ -21,19 +21,32 @@
   <div class="app-shell">
     <!-- Cabecera personalizada -->
     <header class="app-header">
-      <div>
-        <span class="brand-eyebrow">Endocrinología · Privada</span>
-        <h1 class="app-title">Doña Elena</h1>
+      <div class="header-top">
+        <div class="header-brand">
+          <img
+            src="./icons/icon.svg"
+            alt="Logotipo minimalista de un samoyedo"
+            class="brand-logo"
+            width="54"
+            height="54"
+          />
+          <div class="brand-heading">
+            <span class="brand-eyebrow">Endocrinología · Privada</span>
+            <h1 class="app-title">Doña Elena</h1>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button id="installBtn" class="install-btn hidden" type="button" aria-label="Instalar aplicación en el móvil">
+            Instalar
+          </button>
+          <button id="themeToggle" class="icon-btn" type="button" aria-label="Cambiar entre modo claro y oscuro" title="Cambiar tema">
+            <span id="themeIcon" aria-hidden="true">🌙</span>
+          </button>
+        </div>
+      </div>
+      <div class="header-meta">
         <p class="app-subtitle">Tu herramienta de bolsillo para consulta.</p>
         <p class="app-credit">Diseñado por Sam Lazkano</p>
-      </div>
-      <div class="header-actions">
-        <button id="installBtn" class="install-btn hidden" type="button" aria-label="Instalar aplicación en el móvil">
-          Instalar
-        </button>
-        <button id="themeToggle" class="icon-btn" type="button" aria-label="Cambiar entre modo claro y oscuro" title="Cambiar tema">
-          <span id="themeIcon" aria-hidden="true">🌙</span>
-        </button>
       </div>
     </header>
 

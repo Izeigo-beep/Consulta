@@ -1,5 +1,5 @@
 /* Service Worker offline-first para la PWA privada de Doña Elena */
-const CACHE_NAME = 'dona-elena-endo-v1';
+const CACHE_NAME = 'dona-elena-endo-v3';
 
 const APP_SHELL = [
   './',
@@ -34,7 +34,7 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-/* Fetch: estrategia cache-first para peticiones GET del mismo origen con respaldo offline */
+/* Fetch: network-first para HTML/CSS/JS (actualizaciones inmediatas) y cache-first con refresco para iconos */
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET') return;
@@ -42,27 +42,44 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
-  event.respondWith(
-    caches.match(request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
+  const isCoreResource =
+    request.mode === 'navigate' ||
+    request.destination === 'document' ||
+    request.destination === 'style' ||
+    request.destination === 'script';
 
-      return fetch(request)
+  if (isCoreResource) {
+    event.respondWith(
+      fetch(request)
         .then((networkResponse) => {
-          if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
-            return networkResponse;
+          if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+            const copy = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
           }
-          const copy = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
           return networkResponse;
         })
-        .catch(() => {
-          if (request.mode === 'navigate') {
-            return caches.match('./index.html');
+        .catch(() =>
+          caches.match(request).then((cached) =>
+            cached || (request.mode === 'navigate' ? caches.match('./index.html') : Response.error())
+          )
+        )
+    );
+    return;
+  }
+
+  event.respondWith(
+    caches.match(request).then((cachedResponse) => {
+      const networkFetch = fetch(request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+            const copy = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
           }
-          return Response.error();
-        });
+          return networkResponse;
+        })
+        .catch(() => cachedResponse || Response.error());
+
+      return cachedResponse || networkFetch;
     })
   );
 });

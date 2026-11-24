@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="Logotipo minimalista de un samoyedo">
+  <defs>
+    <linearGradient id="sageBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5E8773" />
+      <stop offset="100%" stop-color="#486C5B" />
+    </linearGradient>
+  </defs>
+
+  <!-- Fondo verde salvia -->
+  <rect width="256" height="256" rx="56" fill="url(#sageBg)" />
+
+  <!-- Silueta minimalista de samoyedo (orejas spitz redondeadas + melena esponjosa) -->
+  <path
+    d="
+      M 128 69
+      C 116 69, 108 71, 101 75
+      C 90 56, 70 50, 66 61
+      C 63 71, 67 88, 72 100
+      C 53 111, 46 128, 54 144
+      C 48 156, 56 171, 72 177
+      C 79 192, 98 203, 128 205
+      C 158 203, 177 192, 184 177
+      C 200 171, 208 156, 202 144
+      C 210 128, 203 111, 184 100
+      C 189 88, 193 71, 190 61
+      C 186 50, 166 56, 155 75
+      C 148 71, 140 69, 128 69
+      Z
+    "
+    fill="#F8FAF8"
+    stroke="#25392F"
+    stroke-width="6"
+    stroke-linejoin="round"
+  />
+
+  <!-- Interior sutil de orejas -->
+  <path
+    d="M 78 92 C 74 78, 73 67, 77 66 C 82 65, 89 72, 95 83 Z"
+    fill="#DCE8E1"
+  />
+  <path
+    d="M 178 92 C 182 78, 183 67, 179 66 C 174 65, 167 72, 161 83 Z"
+    fill="#DCE8E1"
+  />
+
+  <!-- Ojos almendrados amables -->
+  <ellipse cx="101" cy="121" rx="6.8" ry="6.5" transform="rotate(-8 101 121)" fill="#25392F" />
+  <circle cx="98.8" cy="118.8" r="2" fill="#F8FAF8" />
+
+  <ellipse cx="155" cy="121" rx="6.8" ry="6.5" transform="rotate(8 155 121)" fill="#25392F" />
+  <circle cx="152.8" cy="118.8" r="2" fill="#F8FAF8" />
+
+  <!-- Nariz ancha redondeada -->
+  <path
+    d="M 116 138 C 116 133, 140 133, 140 138 C 140 144, 133 150, 128 150 C 123 150, 116 144, 116 138 Z"
+    fill="#25392F"
+  />
+
+  <!-- Sonrisa de samoyedo ("Samoyed smile") -->
+  <path
+    d="
+      M 128 150 L 128 157
+      M 107 154 C 112 167, 125 166, 128 157
+      M 149 154 C 144 167, 131 166, 128 157
+    "
+    fill="none"
+    stroke="#25392F"
+    stroke-width="5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
